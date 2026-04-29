@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HireHub — Find Your Next Chapter</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --cream: #f5f0e8;
+    --rust: #c94f2c;
+    --rust-light: #e8603a;
+    --slate: #2d3748;
+    --muted: #6b7280;
+    --border: #e2ddd4;
+    --white: #ffffff;
+    --card-bg: #faf8f4;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 60px;
+    background: rgba(245, 240, 232, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900;
+    color: var(--ink); text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--rust); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: var(--slate);
+    text-decoration: none; letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--rust); }
+
+  .nav-cta {
+    background: var(--rust); color: var(--white);
+    padding: 10px 24px; border-radius: 4px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .nav-cta:hover { background: var(--rust-light); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 60px 80px;
+    gap: 60px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 50%; height: 100%;
+    background: linear-gradient(135deg, #e8dfd0 0%, #d4c9b8 100%);
+    z-index: 0;
+  }
+
+  .hero-text { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--rust);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--rust); padding-bottom: 4px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 900; line-height: 1.05;
+    letter-spacing: -2px; color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: italic; color: var(--rust);
+  }
+
+  .hero-sub {
+    font-size: 17px; color: var(--muted); max-width: 420px;
+    line-height: 1.7; margin-bottom: 40px; font-weight: 400;
+  }
+
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--rust); color: var(--white);
+    padding: 14px 32px; border-radius: 4px; border: none;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { background: var(--rust-light); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(201,79,44,0.3); }
+
+  .btn-outline {
+    background: transparent; color: var(--ink);
+    padding: 14px 32px; border-radius: 4px;
+    border: 2px solid var(--ink);
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--cream); }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 56px;
+    padding-top: 40px; border-top: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700; color: var(--ink); display: block;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: 0.5px; }
+
+  /* Hero Visual */
+  .hero-visual { position: relative; z-index: 1; }
+
+  .job-card-float {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    margin-bottom: 16px;
+    border-left: 4px solid var(--rust);
+    transition: transform 0.3s;
+    cursor: pointer;
+    animation: floatCard 6s ease-in-out infinite;
+  }
+  .job-card-float:nth-child(2) { animation-delay: 2s; border-left-color: var(--slate); }
+  .job-card-float:nth-child(3) { animation-delay: 4s; border-left-color: #4a7c59; }
+
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .jcf-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+  .jcf-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .jcf-icon.marketing { background: #fff0eb; }
+  .jcf-icon.finance { background: #ebf0ff; }
+  .jcf-icon.hr { background: #ebfff0; }
+
+  .jcf-role { font-weight: 700; font-size: 16px; color: var(--ink); }
+  .jcf-dept { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .jcf-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .jcf-tag {
+    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+    background: var(--cream); color: var(--slate); letter-spacing: 0.3px;
+  }
+
+  /* SEARCH BAR */
+  .search-section {
+    background: var(--white);
+    padding: 50px 60px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-bar {
+    display: flex; gap: 12px; max-width: 860px; margin: 0 auto;
+    background: var(--cream); border-radius: 8px; padding: 8px;
+    border: 2px solid var(--border);
+  }
+
+  .search-bar input, .search-bar select {
+    flex: 1; padding: 12px 16px; border: none; background: transparent;
+    font-size: 15px; color: var(--ink); font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+
+  .search-bar .divider { width: 1px; background: var(--border); align-self: stretch; }
+
+  .search-bar button {
+    background: var(--rust); color: var(--white); border: none;
+    padding: 12px 28px; border-radius: 6px; font-size: 15px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .search-bar button:hover { background: var(--rust-light); }
+
+  .search-tags { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+  .search-tag {
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    cursor: pointer; transition: color 0.2s;
+  }
+  .search-tag:hover { color: var(--rust); }
+  .search-tag::before { content: '→ '; }
+
+  /* JOBS SECTION */
+  .jobs-section {
+    padding: 80px 60px;
+    max-width: 1300px; margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 48px;
+  }
+
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--rust); margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 700;
+    color: var(--ink); letter-spacing: -1px; line-height: 1.1;
+  }
+
+  .section-link {
+    font-size: 14px; font-weight: 600; color: var(--rust);
+    text-decoration: none; letter-spacing: 0.3px;
+    border-bottom: 1px solid var(--rust); padding-bottom: 2px;
+  }
+
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: 9px 20px; border-radius: 4px; border: 1.5px solid var(--border);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    background: var(--white); color: var(--slate);
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .filter-tab.active, .filter-tab:hover {
+    background: var(--rust); color: var(--white); border-color: var(--rust);
+  }
+
+  .jobs-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+  }
+
+  .job-card {
+    background: var(--white); border-radius: 12px;
+    padding: 28px 30px; border: 1px solid var(--border);
+    transition: all 0.25s; cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+
+  .job-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--rust); transform: scaleX(0);
+    transition: transform 0.25s; transform-origin: left;
+  }
+  .job-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); border-color: transparent; }
+  .job-card:hover::after { transform: scaleX(1); }
+
+  .job-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+
+  .company-logo-placeholder {
+    width: 50px; height: 50px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+  }
+
+  .job-badge {
+    font-size: 11px; font-weight: 700; padding: 5px 12px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-new { background: #fff0eb; color: var(--rust); }
+  .badge-hot { background: #fff5eb; color: #c97a2c; }
+  .badge-urgent { background: #ffebeb; color: #c92c2c; }
+
+  .job-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px; font-weight: 700; color: var(--ink);
+    margin-bottom: 6px; line-height: 1.25;
+  }
+
+  .job-company { font-size: 14px; color: var(--muted); font-weight: 500; margin-bottom: 14px; }
+
+  .job-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .job-meta-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; color: var(--slate); font-weight: 400;
+  }
+
+  .job-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
+
+  .job-footer { display: flex; justify-content: space-between; align-items: center; }
+
+  .job-salary {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; color: var(--ink);
+  }
+  .job-salary span { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 400; color: var(--muted); }
+
+  .apply-btn {
+    background: var(--ink); color: var(--white);
+    padding: 10px 22px; border-radius: 6px; border: none;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .apply-btn:hover { background: var(--rust); transform: translateY(-1px); }
+
+  /* ABOUT */
+  .about-section {
+    background: var(--ink); color: var(--white);
+    padding: 100px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+
+  .about-text .section-eyebrow { color: var(--rust); }
+
+  .about-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px; font-weight: 700; line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 24px; color: var(--white);
+  }
+
+  .about-body { font-size: 16px; line-height: 1.8; color: #b0b8c8; margin-bottom: 32px; }
+
+  .about-address {
+    background: rgba(255,255,255,0.06); border-radius: 10px;
+    padding: 24px; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .about-address strong { color: var(--white); font-size: 15px; display: block; margin-bottom: 8px; }
+  .about-address p { color: #8a96a8; font-size: 14px; line-height: 1.7; }
+
+  .about-values { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .value-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px; padding: 28px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.2s;
+  }
+  .value-card:hover { background: rgba(255,255,255,0.09); }
+  .value-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+  .value-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; color: var(--white); }
+  .value-desc { font-size: 14px; color: #8a96a8; line-height: 1.6; }
+
+  /* COMPENSATION */
+  .comp-section { padding: 90px 60px; background: var(--card-bg); }
+  .comp-inner { max-width: 1000px; margin: 0 auto; }
+  .comp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; font-weight: 700; letter-spacing: -1px; margin-bottom: 16px;
+  }
+  .comp-intro { font-size: 16px; color: var(--muted); max-width: 600px; margin-bottom: 48px; line-height: 1.7; }
+
+  .comp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .comp-card {
+    background: var(--white); border-radius: 12px; padding: 32px;
+    border: 1px solid var(--border); text-align: center;
+    transition: all 0.25s;
+  }
+  .comp-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+  .comp-card.featured { background: var(--rust); border-color: var(--rust); color: var(--white); }
+  .comp-card.featured .comp-label, .comp-card.featured .comp-desc { color: rgba(255,255,255,0.8); }
+
+  .comp-icon { font-size: 36px; margin-bottom: 16px; display: block; }
+  .comp-label { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .comp-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 8px;
+  }
+  .comp-card.featured .comp-value { color: var(--white); }
+  .comp-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* APPLY MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(15,15,15,0.7); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--white); border-radius: 16px; padding: 48px;
+    width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+    position: relative; animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute; top: 20px; right: 24px;
+    background: none; border: none; font-size: 24px;
+    cursor: pointer; color: var(--muted); transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--ink); }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700; margin-bottom: 6px; color: var(--ink);
+  }
+  .modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--slate); margin-bottom: 7px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+    border-radius: 7px; font-size: 15px; font-family: 'DM Sans', sans-serif;
+    color: var(--ink); background: var(--cream); transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--rust); }
+  .form-textarea { resize: vertical; min-height: 100px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .submit-btn {
+    width: 100%; padding: 14px; background: var(--rust); color: var(--white);
+    border: none; border-radius: 7px; font-size: 16px; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s; margin-top: 10px;
+  }
+  .submit-btn:hover { background: var(--rust-light); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); color: var(--white);
+    padding: 60px 60px 30px;
+  }
+
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px; margin-bottom: 48px;
+  }
+
+  .footer-brand .logo { display: block; margin-bottom: 16px; color: var(--white); }
+  .footer-brand p { font-size: 14px; color: #6b7a8d; line-height: 1.7; max-width: 260px; }
+
+  .footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white); margin-bottom: 18px; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul a { font-size: 14px; color: #6b7a8d; text-decoration: none; transition: color 0.2s; }
+  .footer-col ul a:hover { color: var(--rust); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p { font-size: 13px; color: #4a5568; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+    .hero::before { display: none; }
+    .hero-visual { display: none; }
+    .search-section { padding: 40px 24px; }
+    .search-bar { flex-direction: column; }
+    .jobs-section { padding: 60px 24px; }
+    .jobs-grid { grid-template-columns: 1fr; }
+    .about-section { grid-template-columns: 1fr; padding: 60px 24px; }
+    .comp-section { padding: 60px 24px; }
+    .comp-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    footer { padding: 40px 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Hire<span>Hub</span></a>
+  <ul class="nav-links">
+    <li><a href="#jobs">Open Roles</a></li>
+    <li><a href="#about">About Us</a></li>
+    <li><a href="#compensation">Packages</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#jobs" class="nav-cta">Browse Jobs</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-eyebrow">Wakad, Pune's Premier Talent Partner</span>
+    <h1>Your Career,<br><em>Elevated.</em></h1>
+    <p class="hero-sub">HireHub connects ambitious professionals with companies that are genuinely worth working for. No fluff, no generic job boards — just real opportunities with real growth.</p>
+    <div class="hero-actions">
+      <a href="#jobs" class="btn-primary">Explore Openings</a>
+      <a href="#about" class="btn-outline">Our Story</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-num">340+</span>
+        <span class="stat-label">Placements This Year</span>
+      </div>
+      <div>
+        <span class="stat-num">98%</span>
+        <span class="stat-label">Retention Rate</span>
+      </div>
+      <div>
+        <span class="stat-num">60+</span>
+        <span class="stat-label">Partner Companies</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="job-card-float">
+      <div class="jcf-top">
+        <div class="jcf-icon marketing">📣</div>
+        <div>
+          <div class="jcf-role">Brand Marketing Manager</div>
+          <div class="jcf-dept">Marketing · Wakad, Pune</div>
+        </div>
+      </div>
+      <div class="jcf-tags">
+        <span class="jcf-tag">₹14–18 LPA</span>
+        <span class="jcf-tag">Full-time</span>
+        <span class="jcf-tag">Hybrid</span>
+      </div>
+    </div>
+    <div class="job-card-float">
+      <div class="jcf-top">
+        <div class="jcf-icon finance">💹</div>
+        <div>
+          <div class="jcf-role">Senior Financial Analyst</div>
+          <div class="jcf-dept">Finance · Wakad, Pune</div>
+        </div>
+      </div>
+      <div class="jcf-tags">
+        <span class="jcf-tag">₹16–22 LPA</span>
+        <span class="jcf-tag">Full-time</span>
+        <span class="jcf-tag">On-site</span>
+      </div>
+    </div>
+    <div class="job-card-float">
+      <div class="jcf-top">
+        <div class="jcf-icon hr">🤝</div>
+        <div>
+          <div class="jcf-role">Digital Marketing Lead</div>
+          <div class="jcf-dept">Marketing · Wakad, Pune</div>
+        </div>
+      </div>
+      <div class="jcf-tags">
+        <span class="jcf-tag">₹12–16 LPA</span>
+        <span class="jcf-tag">Full-time</span>
+        <span class="jcf-tag">Remote OK</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<section class="search-section">
+  <div class="search-bar">
+    <input type="text" placeholder="Job title, skill or keyword…" id="searchInput">
+    <div class="divider"></div>
+    <select id="deptFilter">
+      <option value="all">All Departments</option>
+      <option value="marketing">Marketing</option>
+      <option value="finance">Finance</option>
+    </select>
+    <div class="divider"></div>
+    <select id="typeFilter">
+      <option value="all">All Types</option>
+      <option value="Full-time">Full-time</option>
+      <option value="Contract">Contract</option>
+    </select>
+    <button onclick="filterJobs()">Search Jobs</button>
+  </div>
+  <div class="search-tags">
+    <span class="search-tag" onclick="quickSearch('Brand Manager')">Brand Manager</span>
+    <span class="search-tag" onclick="quickSearch('Financial Analyst')">Financial Analyst</span>
+    <span class="search-tag" onclick="quickSearch('Digital Marketing')">Digital Marketing</span>
+    <span class="search-tag" onclick="quickSearch('CFO')">CFO</span>
+    <span class="search-tag" onclick="quickSearch('Performance Marketing')">Performance Marketing</span>
+  </div>
+</section>
+
+<!-- JOBS -->
+<section class="jobs-section" id="jobs">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Currently Hiring</div>
+      <div class="section-title">Open Positions</div>
+    </div>
+    <a href="#" class="section-link">View all roles →</a>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="setTab(this,'all')">All Roles</button>
+    <button class="filter-tab" onclick="setTab(this,'marketing')">Marketing</button>
+    <button class="filter-tab" onclick="setTab(this,'finance')">Finance</button>
+    <button class="filter-tab" onclick="setTab(this,'Full-time')">Full-time</button>
+    <button class="filter-tab" onclick="setTab(this,'Contract')">Contract</button>
+  </div>
+
+  <div class="jobs-grid" id="jobsGrid"></div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-text">
+    <div class="section-eyebrow">Who We Are</div>
+    <h2 class="about-title">Pune's most human recruitment firm.</h2>
+    <p class="about-body">
+      HireHub was built on a simple frustration: most job portals are transactional, cold, and built for volume over quality. We do things differently. We take time to understand both sides of the table — the candidate chasing their best work and the company building something worth believing in.
+      <br><br>
+      Headquartered in the heart of Wakad, Pune, we specialize in mid-to-senior placements across Marketing and Finance. When we place someone, we expect it to last.
+    </p>
+    <div class="about-address">
+      <strong>📍 HireHub Recruitment Solutions Pvt. Ltd.</strong>
+      <p>Office No. 204, Siddhi Icon,<br>
+      Datta Mandir Road, Wakad,<br>
+      Pune – 411057, Maharashtra, India<br><br>
+      📞 +91 98221 43870 &nbsp;|&nbsp; ✉️ hello@hirehub.in</p>
+    </div>
+  </div>
+  <div class="about-values">
+    <div class="value-card">
+      <span class="value-icon">🔍</span>
+      <div class="value-title">Thorough Evaluation</div>
+      <div class="value-desc">We assess candidates across skills, culture fit, and long-term potential — not just what's on paper.</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">🤝</span>
+      <div class="value-title">Honest Process</div>
+      <div class="value-desc">We tell candidates what's real, and we tell companies what they need to hear. No sugar-coating.</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">⚡</span>
+      <div class="value-title">Fast Turnaround</div>
+      <div class="value-desc">Our average time-to-offer is 12 days. Quality and speed aren't mutually exclusive — we prove it.</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon">📈</span>
+      <div class="value-title">Long-term Thinking</div>
+      <div class="value-desc">We track retention, not just placements. Our success metric is careers, not transactions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPENSATION -->
+<section class="comp-section" id="compensation">
+  <div class="comp-inner">
+    <div class="section-eyebrow">What We Offer</div>
+    <h2 class="comp-title">Competitive packages,<br>honestly structured.</h2>
+    <p class="comp-intro">Our compensation philosophy is simple: pay people what their work is worth, structure it transparently, and add benefits that actually matter in real life.</p>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="comp-icon">💰</span>
+        <div class="comp-label">Base Salary</div>
+        <div class="comp-value">₹8–32 LPA</div>
+        <div class="comp-desc">Role and level dependent. All offers include a written salary breakup before you accept.</div>
+      </div>
+      <div class="comp-card featured">
+        <span class="comp-icon">🏆</span>
+        <div class="comp-label">Performance Bonus</div>
+        <div class="comp-value">10–25%</div>
+        <div class="comp-desc">Quarterly performance bonuses tied to measurable, agreed-upon goals — not vague discretion.</div>
+      </div>
+      <div class="comp-card">
+        <span class="comp-icon">🏥</span>
+        <div class="comp-label">Health & Wellness</div>
+        <div class="comp-value">₹5L Cover</div>
+        <div class="comp-desc">Group mediclaim for employee + family, plus mental wellness support included.</div>
+      </div>
+      <div class="comp-card">
+        <span class="comp-icon">📚</span>
+        <div class="comp-label">Learning Budget</div>
+        <div class="comp-value">₹40K / yr</div>
+        <div class="comp-desc">Annual L&D allowance for certifications, courses, or conferences — yours to use freely.</div>
+      </div>
+      <div class="comp-card featured">
+        <span class="comp-icon">🏠</span>
+        <div class="comp-label">Flexible Work</div>
+        <div class="comp-value">Hybrid OK</div>
+        <div class="comp-desc">Most of our placements offer hybrid arrangements. We only partner with companies that trust their people.</div>
+      </div>
+      <div class="comp-card">
+        <span class="comp-icon">📅</span>
+        <div class="comp-label">Paid Leave</div>
+        <div class="comp-value">24+ Days</div>
+        <div class="comp-desc">Earned leave, casual leave, and sick leave — plus paid maternity/paternity leave for all roles.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="logo" href="#">Hire<span>Hub</span></a>
+      <p>Pune's most human recruitment firm. We match the right people with the right companies — and we stand by every placement we make.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About HireHub</a></li>
+        <li><a href="#jobs">Open Roles</a></li>
+        <li><a href="#compensation">Packages</a></li>
+        <li><a href="#">For Employers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Departments</h4>
+      <ul>
+        <li><a href="#">Marketing Roles</a></li>
+        <li><a href="#">Finance Roles</a></li>
+        <li><a href="#">Leadership</a></li>
+        <li><a href="#">Contract Work</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@hirehub.in">hello@hirehub.in</a></li>
+        <li><a href="tel:+919822143870">+91 98221 43870</a></li>
+        <li><a href="#">Wakad, Pune 411057</a></li>
+        <li><a href="#">Mon–Sat, 9am–7pm</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 HireHub Recruitment Solutions Pvt. Ltd. All rights reserved.</p>
+    <p>Privacy Policy · Terms of Use</p>
+  </div>
+</footer>
+
+<!-- APPLY MODAL -->
+<div class="modal-overlay" id="applyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modalJobTitle">Apply for Role</div>
+    <div class="modal-sub" id="modalJobSub">HireHub · Wakad, Pune</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">First Name *</label>
+        <input class="form-input" type="text" placeholder="Rohit">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name *</label>
+        <input class="form-input" type="text" placeholder="Sharma">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Address *</label>
+      <input class="form-input" type="email" placeholder="rohit@example.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+      <input class="form-input" type="tel" placeholder="+91 98765 43210">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Current Company & Role</label>
+      <input class="form-input" type="text" placeholder="e.g. TCS · Senior Analyst">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Total Experience</label>
+      <select class="form-select">
+        <option>0–2 years</option>
+        <option>2–5 years</option>
+        <option>5–8 years</option>
+        <option>8–12 years</option>
+        <option>12+ years</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Why this role? (optional)</label>
+      <textarea class="form-textarea" placeholder="Tell us what draws you to this position..."></textarea>
+    </div>
+    <button class="submit-btn" onclick="submitApplication()">Submit Application →</button>
+  </div>
+</div>
+
+<script>
+  const jobs = [
+    {
+      id: 1, dept: 'marketing', type: 'Full-time',
+      title: 'Brand Marketing Manager',
+      company: 'Nexora Consumer Brands',
+      location: 'Wakad, Pune', mode: 'Hybrid',
+      salary: '₹14–18 LPA',
+      badge: 'Hot', badgeClass: 'badge-hot',
+      logo: '🅝', logoBg: '#fff0eb',
+      desc: 'Lead brand strategy for a fast-growing FMCG portfolio. You\'ll own campaigns from brief to execution — managing agencies, budgets, and a lean in-house team of 4.',
+      skills: ['Brand Strategy', 'ATL/BTL', 'P&L Management'],
+    },
+    {
+      id: 2, dept: 'finance', type: 'Full-time',
+      title: 'Senior Financial Analyst',
+      company: 'Quorum Capital Advisors',
+      location: 'Wakad, Pune', mode: 'On-site',
+      salary: '₹16–22 LPA',
+      badge: 'New', badgeClass: 'badge-new',
+      logo: '🅠', logoBg: '#ebf0ff',
+      desc: 'Own financial modelling, forecasting and variance analysis for a ₹500Cr AUM portfolio. Work directly with the CFO and senior leadership on strategic planning.',
+      skills: ['Financial Modelling', 'Excel/VBA', 'DCF Analysis'],
+    },
+    {
+      id: 3, dept: 'marketing', type: 'Full-time',
+      title: 'Digital Marketing Lead',
+      company: 'Stackr Technologies',
+      location: 'Wakad, Pune', mode: 'Remote-friendly',
+      salary: '₹12–16 LPA',
+      badge: 'New', badgeClass: 'badge-new',
+      logo: '🅢', logoBg: '#ebfff0',
+      desc: 'Drive paid + organic growth across Google, Meta, and LinkedIn. You\'ll own the full funnel — from acquisition strategy to conversion optimisation — with a ₹40L/mo budget.',
+      skills: ['Performance Marketing', 'SEO/SEM', 'Analytics'],
+    },
+    {
+      id: 4, dept: 'finance', type: 'Full-time',
+      title: 'Finance Controller',
+      company: 'Meridian Manufacturing Ltd.',
+      location: 'Wakad, Pune', mode: 'On-site',
+      salary: '₹24–30 LPA',
+      badge: 'Urgent', badgeClass: 'badge-urgent',
+      logo: '🅜', logoBg: '#f0ebff',
+      desc: 'Oversee the full finance function for a 1,200-person manufacturing firm — MIS, compliance, audits, and board-level reporting. CA / CPA strongly preferred.',
+      skills: ['CA / CPA', 'MIS Reporting', 'Statutory Compliance'],
+    },
+    {
+      id: 5, dept: 'marketing', type: 'Contract',
+      title: 'Content Marketing Strategist',
+      company: 'BloomPath EdTech',
+      location: 'Wakad, Pune', mode: 'Remote',
+      salary: '₹80–100K/mo',
+      badge: 'New', badgeClass: 'badge-new',
+      logo: '🅑', logoBg: '#fffbeb',
+      desc: 'Build and execute a content engine from scratch — thought leadership, SEO articles, video scripts, and email campaigns. 6-month contract with strong conversion-to-full-time potential.',
+      skills: ['Content Strategy', 'SEO Writing', 'Email Marketing'],
+    },
+    {
+      id: 6, dept: 'finance', type: 'Contract',
+      title: 'Investment Research Analyst',
+      company: 'Zenith Wealth Partners',
+      location: 'Wakad, Pune', mode: 'Hybrid',
+      salary: '₹70–90K/mo',
+      badge: 'Hot', badgeClass: 'badge-hot',
+      logo: '🅩', logoBg: '#ebf5ff',
+      desc: 'Produce in-depth equity research notes and sector reports for HNI clients. Strong command of Bloomberg Terminal, company filings, and presenting findings to investment committees.',
+      skills: ['Equity Research', 'Bloomberg', 'Report Writing'],
+    },
+  ];
+
+  let activeTab = 'all';
+  let searchTerm = '';
+
+  function renderJobs(list) {
+    const grid = document.getElementById('jobsGrid');
+    if (list.length === 0) {
+      grid.innerHTML = '<p style="color:var(--muted);font-size:16px;grid-column:1/-1;text-align:center;padding:40px 0">No roles match your search. Try a different keyword.</p>';
+      return;
+    }
+    grid.innerHTML = list.map(j => `
+      <div class="job-card" onclick="openModal('${j.title}','${j.company}')">
+        <div class="job-card-head">
+          <div class="company-logo-placeholder" style="background:${j.logoBg};color:var(--rust);font-size:18px;">${j.company.charAt(0)}</div>
+          <span class="job-badge ${j.badgeClass}">${j.badge}</span>
+        </div>
+        <div class="job-title">${j.title}</div>
+        <div class="job-company">${j.company}</div>
+        <div class="job-meta">
+          <span class="job-meta-item">📍 ${j.location}</span>
+          <span class="job-meta-item">🏢 ${j.mode}</span>
+          <span class="job-meta-item">⏱ ${j.type}</span>
+        </div>
+        <p class="job-desc">${j.desc}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+          ${j.skills.map(s => `<span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--cream);color:var(--slate);">${s}</span>`).join('')}
+        </div>
+        <div class="job-footer">
+          <div class="job-salary">${j.salary} <span>/ annum</span></div>
+          <button class="apply-btn" onclick="event.stopPropagation();openModal('${j.title}','${j.company}')">Apply Now</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterJobs() {
+    searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const dept = document.getElementById('deptFilter').value;
+    const type = document.getElementById('typeFilter').value;
+    let filtered = jobs.filter(j => {
+      const matchSearch = !searchTerm || j.title.toLowerCase().includes(searchTerm) || j.desc.toLowerCase().includes(searchTerm) || j.skills.some(s => s.toLowerCase().includes(searchTerm));
+      const matchDept = dept === 'all' || j.dept === dept;
+      const matchType = type === 'all' || j.type === type;
+      return matchSearch && matchDept && matchType;
+    });
+    renderJobs(filtered);
+  }
+
+  function setTab(el, tab) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    activeTab = tab;
+    const filtered = tab === 'all' ? jobs : jobs.filter(j => j.dept === tab || j.type === tab);
+    renderJobs(filtered);
+  }
+
+  function quickSearch(term) {
+    document.getElementById('searchInput').value = term;
+    filterJobs();
+    document.getElementById('jobs').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function openModal(title, company) {
+    document.getElementById('modalJobTitle').textContent = `Apply — ${title}`;
+    document.getElementById('modalJobSub').textContent = `${company} · HireHub · Wakad, Pune`;
+    document.getElementById('applyModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('applyModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function submitApplication() {
+    closeModal();
+    setTimeout(() => alert('✅ Application submitted! Our team will reach out within 2 working days.'), 100);
+  }
+
+  document.getElementById('applyModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Init
+  renderJobs(jobs);
+</script>
+</body>
+</html>
